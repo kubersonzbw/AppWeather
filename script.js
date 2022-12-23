@@ -8,25 +8,27 @@ const temperature = document.querySelector(".temperature");
 const humidity = document.querySelector(".humidity");
 
 const API_LINK = "https://api.openweathermap.org/data/2.5/weather?q=";
-const API_KEY = "&appid=85bbf3c473e18fd7a81e8ec0a5387974";
+const API_KEY = "";
 const API_UNITS = "&units=metric";
 
 async function getWather(e) {
   if (input != null && input.value) {
     const city = input.value;
     const URL = API_LINK + city + API_KEY + API_UNITS;
+    let weath = null;
+    let humi = null;
+    let temp = null;
+    let error = null;
     try {
       const res = await axios.get(URL);
-      if (res.status === 200) {
-        const weath = Object.assign({}, ...res.data.weather);
-        const humi = res.data.main.humidity;
-        const temp = res.data.main.temp;
-        cityChange(city, temp, humi, weath);
-        changePicture(weath);
-      }
-    } catch (error) {
-      cityChange(null, null, null, null, error);
+      weath = Object.assign({}, ...res.data.weather);
+      humi = res.data.main.humidity;
+      temp = res.data.main.temp;
+      changePicture(weath);
+    } catch (e) {
+      error = e;
     }
+    cityChange(city, temp, humi, weath, error);
   }
 }
 
